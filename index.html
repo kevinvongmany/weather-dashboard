@@ -72,7 +72,12 @@
           <!-- Populated by user in weather.js -->
         </div>
       </div>
-      <div class="flex flex-col w-full lg:w-3/4">
+      <div id="landing-page" class="w-full h-full lg:w-3/4 hidden">
+        <p class="text-center mt-3">
+          Search for a city to get the current weather and 5-day forecast
+        </p>
+      </div>
+      <div id="weather" class="flex flex-col w-full lg:w-3/4">
         <div class="border mt-2 mx-2 p-3">
           <div class="flex flex-col">
             <h2 class="text-2xl inline" id="current-weather-heading"></h2>
@@ -84,32 +89,37 @@
         </div>
         <h2 class="text-4xl p-3"></h2>
         <div id="forecast-cards" class="flex flex-wrap justify-around">
-          <div
-            class="w-full lg:w-1/6 mx-3 mb-4 bg-gray-800 text-white p-2 rounded-md"
+          <!-- <div
+            id="forecast-0"
+            class="forecast-card w-full lg:w-1/6 mx-3 mb-4 bg-gray-800 text-white p-2 rounded-md"
           >
-            <h3 class="text-2xl">Today</h3>
+            <h3 class="forecast-heading text-2xl">Today</h3>
             <p>Lorem ipsum</p>
           </div>
           <div
-            class="w-full lg:w-1/6 mx-3 mb-4 bg-gray-800 text-white p-2 rounded-md"
+            id="forecast-1"
+            class="forecast-card w-full lg:w-1/6 mx-3 mb-4 bg-gray-800 text-white p-2 rounded-md"
           >
-            <h3 class="text-2xl">Tomorrow</h3>
+            <h3 class="forecast-heading text-2xl">Tomorrow</h3>
           </div>
           <div
-            class="w-full lg:w-1/6 mx-3 mb-4 bg-gray-800 text-white p-2 rounded-md"
+            id="forecast-2"
+            class="forecast-card w-full lg:w-1/6 mx-3 mb-4 bg-gray-800 text-white p-2 rounded-md"
           >
-            <h3 class="text-2xl">Tomorrow</h3>
+            <h3 class="forecast-heading text-2xl">Tomorrow</h3>
           </div>
           <div
-            class="w-full lg:w-1/6 mx-3 mb-4 bg-gray-800 text-white p-2 rounded-md"
+            id="forecast-3"
+            class="forecast-card w-full lg:w-1/6 mx-3 mb-4 bg-gray-800 text-white p-2 rounded-md"
           >
-            <h3 class="text-2xl">Tomorrow</h3>
+            <h3 class="forecast-heading text-2xl">Tomorrow</h3>
           </div>
           <div
-            class="w-full lg:w-1/6 mx-3 mb-4 bg-gray-800 text-white p-2 rounded-md"
+            id="forecast-4"
+            class="forecast-card w-full lg:w-1/6 mx-3 mb-4 bg-gray-800 text-white p-2 rounded-md"
           >
-            <h3 class="text-2xl">Tomorrow</h3>
-          </div>
+            <h3 class="forecast-heading text-2xl">Tomorrow</h3>
+          </div> -->
         </div>
       </div>
     </div>
