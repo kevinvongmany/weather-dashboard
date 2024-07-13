@@ -3,7 +3,8 @@ const apiKey = "9f56d69ab450c02cd489d786e4be2876";
 const searchCityForm = document.getElementById("search-city");
 const searchCityInput = document.getElementById("search-city-input");
 const searchCityButton = document.getElementById("search-city-button");
-
+const strDateFormat = "MMMM D, YYYY";
+const forecastCardsDiv = document.getElementById("forecast-cards");
 
 
 function buildUrl(city, apiKey, units) {
@@ -13,7 +14,9 @@ function buildUrl(city, apiKey, units) {
 
 function getWeather(city) {
   // make a fetch request to the API
+  console.log(city);
   if (!city) {
+    renderLandingPage();
     return;
   }
   const url = buildUrl(city, apiKey, localStorage.getItem("units"));
@@ -31,9 +34,15 @@ function getWeather(city) {
     .then((data) => {
       dataCityName = data.city.name;
       renderWeatherData(data.list[0], dataCityName);
+      const forecastData = getForecastData(data);
+      forecastCardsDiv.innerHTML = "";
+      forecastData.forEach((forecast) => {
+        renderForecastData(forecast);
+      });
       const cityHistory = updateHistory(dataCityName);
       updateSessionLastResult(dataCityName, data);
       renderHistoryPanel(cityHistory);
+      hideLandingPage();
     })
     .catch((error) => {
       console.error("Error:", error);
@@ -55,14 +64,22 @@ function getWindSpeed(weatherObj) {
 function getWeatherIcon(weatherObj) {
     return weatherObj.weather[0].icon;
 }
+
+function getForecastData(weatherObj) {
+  const forecastData = weatherObj.list.filter((item) => {
+    return item.dt_txt.includes("12:00:00");
+  });
+  console.log(forecastData);
+  return forecastData;
+}
+
 function createHistoryButton(city, historyPanel) {
   const buttonDiv = document.createElement("button");
   buttonDiv.setAttribute(
     "class",
     "w-10/12 bg-yellow-500 text-black border border-gray py-2 px-4 rounded-md mb-2 focus:outline-none hover:bg-yellow-600 hover:shadow-md transition duration-200 ease-in-out"
   );
-  // add data attributes for future API calls
-  buttonDiv.dataset.city = city; // useful for later if we want to make another API call
+  buttonDiv.dataset.city = city;
   buttonDiv.textContent = city;
   historyPanel.appendChild(buttonDiv);
 }
@@ -72,13 +89,28 @@ function renderHistoryPanel(cities) {
   historyDiv.innerHTML = "";
   console.log(cities);
   for (const index in cities) {
-    // console.log(cities[index])
     createHistoryButton(cities[index], historyDiv);
   }
 }
 
 function getHistory() {
     return JSON.parse(localStorage.getItem("history")) || [];
+
+}
+
+function renderLandingPage() {
+  const landingPage = document.getElementById("landing-page");
+  const weatherDiv = document.getElementById("weather");
+  landingPage.classList.remove("hidden");
+  weatherDiv.classList.add("hidden");
+
+}
+
+function hideLandingPage() {
+  const landingPage = document.getElementById("landing-page");
+  const weatherDiv = document.getElementById("weather");
+  landingPage.classList.add("hidden");
+  weatherDiv.classList.remove("hidden");
 
 }
 
@@ -122,7 +154,7 @@ function renderWeatherData(weatherObj, cityName) {
   const weatherIcon = document.getElementById("weather-icon");
   weatherIcon.src = `http://openweathermap.org/img/wn/${weatherIconId}.png`;
   console.log(weatherObj);
-  heading.textContent = `${cityName} (${dayjs().format("MMMM D, YYYY")})`;
+  heading.textContent = `${cityName} (${dayjs().format(strDateFormat)})`;
   heading.appendChild(weatherIcon);
   if (localStorage.getItem("units") === "metric") {
     tempP.textContent = `Temperature: ${getWeatherTemp(weatherObj)}°C`;
@@ -137,6 +169,38 @@ function renderWeatherData(weatherObj, cityName) {
   }
   humidityP.textContent = `Humidity: ${getWeatherHumidity(weatherObj)}%`;
 }
+
+function renderForecastData(forecastData) {
+  // render forecast data to the page
+  const forecastDiv = document.createElement("div");
+  const forecastHeading = document.createElement("h3");
+  const forecastIcon = document.createElement("img");
+  const forecastTemp = document.createElement("p");
+  const forecastHumidity = document.createElement("p");
+  const forecastWindSpeed = document.createElement("p");
+  forecastIcon.src = `http://openweathermap.org/img/wn/${forecastData.weather[0].icon}.png`;
+  forecastTemp.classList.add("mb-3");
+  forecastHumidity.classList.add("mb-3");
+  forecastWindSpeed.classList.add("mb-3");
+  forecastDiv.setAttribute("class", "forecast-card w-full lg:w-1/6 mx-3 mb-4 bg-gray-800 text-white p-2 rounded-md");
+  forecastHeading.setAttribute("class", "forecast-heading text-2xl text-bold mb-2");
+  forecastHeading.textContent = dayjs(forecastData.dt_txt).format(strDateFormat);
+  if (localStorage.getItem("units") === "metric") {
+    forecastTemp.textContent = `Temp: ${forecastData.main.temp}°C`;
+    forecastWindSpeed.textContent = `Wind Speed: ${forecastData.wind.speed} m/s`;
+  } else {
+    forecastTemp.textContent = `Temp: ${forecastData.main.temp}°F`;
+    forecastWindSpeed.textContent = `Wind Speed: ${forecastData.wind.speed} mph`;
+  }
+  forecastHumidity.textContent = `Humidity: ${forecastData.main.humidity}%`;
+  forecastDiv.appendChild(forecastHeading);
+  forecastDiv.appendChild(forecastIcon);
+  forecastDiv.appendChild(forecastTemp);
+  forecastDiv.appendChild(forecastHumidity);
+  forecastDiv.appendChild(forecastWindSpeed);
+  forecastCardsDiv.appendChild(forecastDiv);
+}
+
 
 function isRepeated(city) {
   const lastSearched = getSessionLastResult().city;
@@ -155,7 +219,7 @@ Event listeners
 
 window.addEventListener("load", (e) => {
   e.preventDefault();
-  let units = localStorage.getItem("units");
+  let units = localStorage.getItem("units") || "metric";
   if (units) {
     const selectedLabel = document.getElementById(`${units}`);
     const selectedRadio = document.querySelector(
@@ -166,6 +230,7 @@ window.addEventListener("load", (e) => {
     selectedLabel.classList.add("bg-orange-500", "text-white");
 
   }
+  renderHistoryPanel(getHistory());
   const lastSearched = getSessionLastResult().city;
   getWeather(lastSearched);
 });
