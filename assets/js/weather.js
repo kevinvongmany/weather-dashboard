@@ -77,7 +77,7 @@ function createHistoryButton(city, historyPanel) {
   const buttonDiv = document.createElement("button");
   buttonDiv.setAttribute(
     "class",
-    "w-10/12 bg-yellow-500 text-black border border-gray py-2 px-4 rounded-md mb-2 focus:outline-none hover:bg-yellow-600 hover:shadow-md transition duration-200 ease-in-out"
+    "w-10/12 bg-yellow-500 text-gray-800 border border-gray py-2 px-4 rounded-md mb-2 focus:outline-none hover:bg-yellow-600 hover:shadow-md transition duration-200 ease-in-out"
   );
   buttonDiv.dataset.city = city;
   buttonDiv.textContent = city;
@@ -182,7 +182,7 @@ function renderForecastData(forecastData) {
   forecastTemp.classList.add("mb-3");
   forecastHumidity.classList.add("mb-3");
   forecastWindSpeed.classList.add("mb-3");
-  forecastDiv.setAttribute("class", "forecast-card w-full lg:w-1/6 mx-3 mb-4 bg-gray-800 text-white p-2 rounded-md");
+  forecastDiv.setAttribute("class", "forecast-card w-full lg:w-1/6 mx-3 mb-4 bg-gray-900 text-white p-2 rounded-md");
   forecastHeading.setAttribute("class", "forecast-heading text-2xl text-bold mb-2");
   forecastHeading.textContent = dayjs(forecastData.dt_txt).format(strDateFormat);
   if (localStorage.getItem("units") === "metric") {

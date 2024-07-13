@@ -8,8 +8,7 @@ npm: 10.7.0
 ### Development environment
 ```
 npm install
-npx tailwindcss -i ./src/custom.css -o ./src/styles.css --watch
-
+npx tailwindcss -i ./assets/css/custom.css -o ./assets/css/styles.css --watch
 ```
 
 
