@@ -12,16 +12,10 @@ function buildUrl(city, apiKey, units) {
 }
 
 function getWeather(city) {
-  // check if the city is the same as the last searched city so we're not spamming the API
-  const lastResult = getSessionLastResult();
-  console.log(lastResult);
-  if (lastResult.city.toLowerCase() === city.toLowerCase()) {
-    renderWeatherData(lastResult.data.list[0], lastResult.city);
-    const cityHistory = updateHistory(lastResult.city);
-    renderHistoryPanel(cityHistory);
-    return
-  }
   // make a fetch request to the API
+  if (!city) {
+    return;
+  }
   const url = buildUrl(city, apiKey, localStorage.getItem("units"));
   fetch(url)
     .then((response) => {
@@ -106,7 +100,7 @@ function updateHistory(city) {
 
 
 function getSessionLastResult() {
-    return JSON.parse(sessionStorage.getItem("lastSearched")) || [];
+    return JSON.parse(sessionStorage.getItem("lastSearched")) || {city: "", data: {}};
     
 }
 
@@ -144,6 +138,13 @@ function renderWeatherData(weatherObj, cityName) {
   humidityP.textContent = `Humidity: ${getWeatherHumidity(weatherObj)}%`;
 }
 
+function isRepeated(city) {
+  const lastSearched = getSessionLastResult().city;
+  if (lastSearched.toLowerCase() === city.toLowerCase()) {
+    return true;
+  }
+}
+
 /*
 Init functions
 */
@@ -173,7 +174,9 @@ searchCityForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const city = searchCityInput.value;
   searchCityInput.value = "";
-  getWeather(city);
+  if (!isRepeated(city)){
+    getWeather(city);
+  }
 
 });
 
@@ -198,5 +201,7 @@ document.querySelectorAll('input[name="units"]').forEach((input) => {
 document.querySelector("#history").addEventListener("click", (e) => {
   e.preventDefault();
   const city = e.target.dataset.city;
-  getWeather(city);
+  if (!isRepeated(city)){
+    getWeather(city);
+  }
 });
