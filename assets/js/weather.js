@@ -230,6 +230,7 @@ window.addEventListener("load", (e) => {
     selectedLabel.classList.add("bg-orange-500", "text-white");
 
   }
+  renderHistoryPanel(getHistory());
   const lastSearched = getSessionLastResult().city;
   getWeather(lastSearched);
 });
