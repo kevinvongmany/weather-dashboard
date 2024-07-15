@@ -219,17 +219,19 @@ Event listeners
 
 window.addEventListener("load", (e) => {
   e.preventDefault();
-  let units = localStorage.getItem("units") || "metric";
-  if (units) {
-    const selectedLabel = document.getElementById(`${units}`);
-    const selectedRadio = document.querySelector(
-      `input[name="units"][value="${units}"]`
-    );
-    console.log(selectedRadio);
-    selectedRadio.checked = true;
-    selectedLabel.classList.add("bg-orange-500", "text-white");
-
+  let units = localStorage.getItem("units");
+  console.log(typeof(units));
+  if (units == null || units == "null") {
+    units = "metric";
+    localStorage.setItem("units", units);
   }
+  const selectedLabel = document.getElementById(`${units}`);
+  const selectedRadio = document.querySelector(
+    `input[name="units"][value="${units}"]`
+  );
+  console.log(selectedRadio);
+  selectedRadio.checked = true;
+  selectedLabel.classList.add("bg-orange-500", "text-white");
   renderHistoryPanel(getHistory());
   const lastSearched = getSessionLastResult().city;
   getWeather(lastSearched);
