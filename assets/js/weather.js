@@ -160,12 +160,12 @@ function renderWeatherData(weatherObj, cityName) {
     tempP.textContent = `Temperature: ${getWeatherTemp(weatherObj)}°C`;
     windP.textContent = `Wind Speed: ${getWindSpeed(
       weatherObj
-    )} meters per seconds`;
+    )} m/s`;
   } else {
     tempP.textContent = `Temperature: ${getWeatherTemp(weatherObj)}°F`;
     windP.textContent = `Wind Speed: ${getWindSpeed(
       weatherObj
-    )} miles per hour`;
+    )} mph`;
   }
   humidityP.textContent = `Humidity: ${getWeatherHumidity(weatherObj)}%`;
 }
